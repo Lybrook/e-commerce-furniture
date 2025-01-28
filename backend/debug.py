@@ -1,7 +1,8 @@
-from app import app, db
-from models import User, Product, Order
+#!/usr/bin/env python3
 
-with app.app_context():
-    print("Users:", User.query.all())
-    print("Products:", Product.query.all())
-    print("Orders:", Order.query.all())
+from app import app
+from models import db, User, Product, Order, OrderProduct
+
+if __name__ == '__main__':
+    with app.app_context():
+        import ipdb; ipdb.set_trace()
