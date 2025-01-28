@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 from flask import Flask, request, jsonify, make_response
 from flask_migrate import Migrate
@@ -30,7 +31,7 @@ def users():
     if request.method == "GET":
         users = User.query.all()
         users_dict = [user.to_dict(only=("id", "name", "email", "budget")) for user in users]
-        return make_response(jsonify(users_dict), 200)
+        return jsonify(users_dict), 200
 
     elif request.method == "POST":
         data = request.get_json()
@@ -42,9 +43,9 @@ def users():
             )
             db.session.add(user)
             db.session.commit()
-            return make_response(user.to_dict(), 201)
+            return jsonify(user.to_dict()), 201
         except Exception as e:
-            return make_response({"error": str(e)}, 400)
+            return jsonify({"error": str(e)}), 400
 
 
 # Product routes
@@ -53,7 +54,7 @@ def products():
     if request.method == "GET":
         products = Product.query.all()
         products_dict = [product.to_dict(only=("id", "name", "description", "price", "category", "image_url")) for product in products]
-        return make_response(jsonify(products_dict), 200)
+        return jsonify(products_dict), 200
 
     elif request.method == "POST":
         data = request.get_json()
@@ -67,9 +68,9 @@ def products():
             )
             db.session.add(product)
             db.session.commit()
-            return make_response(product.to_dict(), 201)
+            return jsonify(product.to_dict()), 201
         except Exception as e:
-            return make_response({"error": str(e)}, 400)
+            return jsonify({"error": str(e)}), 400
 
 
 # Order routes
@@ -78,7 +79,7 @@ def orders():
     if request.method == "GET":
         orders = Order.query.all()
         orders_dict = [order.to_dict(only=("id", "user_id", "total_cost", "order_products")) for order in orders]
-        return make_response(jsonify(orders_dict), 200)
+        return jsonify(orders_dict), 200
 
     elif request.method == "POST":
         data = request.get_json()
@@ -89,9 +90,9 @@ def orders():
             )
             db.session.add(order)
             db.session.commit()
-            return make_response(order.to_dict(), 201)
+            return jsonify(order.to_dict()), 201
         except Exception as e:
-            return make_response({"error": str(e)}, 400)
+            return jsonify({"error": str(e)}), 400
 
 
 # OrderProduct routes
@@ -107,9 +108,9 @@ def add_order_product():
         )
         db.session.add(order_product)
         db.session.commit()
-        return make_response(order_product.to_dict(), 201)
+        return jsonify(order_product.to_dict()), 201
     except Exception as e:
-        return make_response({"error": str(e)}, 400)
+        return jsonify({"error": str(e)}), 400
 
 
 if __name__ == "__main__":
