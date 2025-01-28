@@ -12,7 +12,16 @@ metadata = MetaData(
 
 db = SQLAlchemy(metadata=metadata)
 
-class User(db.Model, SerializerMixin):
+class BaseModel(db.Model, SerializerMixin):
+    __abstract__ = True
+
+    def to_dict(self, only=None):
+        data = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        if only:
+            data = {key: value for key, value in data.items() if key in only}
+        return data
+
+class User(BaseModel):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -27,15 +36,19 @@ class User(db.Model, SerializerMixin):
     def __repr__(self):
         return f"<User {self.name}, {self.email}>"
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'email': self.email,
-            'budget': self.budget
-        }
+    @validates('email')
+    def validate_email(self, key, email):
+        if '@' not in email:
+            raise ValueError("Invalid email")
+        return email
 
-class Product(db.Model, SerializerMixin):
+    @validates('budget')
+    def validate_budget(self, key, budget):
+        if budget < 0:
+            raise ValueError("Budget must be greater than or equal to 0")
+        return budget
+
+class Product(BaseModel):
     __tablename__ = "products"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -49,26 +62,16 @@ class Product(db.Model, SerializerMixin):
 
     serialize_rules = ('-order_products.product',)
 
+    def __repr__(self):
+        return f"<Product {self.name}, {self.price}>"
+
     @validates('price')
     def validate_price(self, key, price):
         if price <= 0:
             raise ValueError("Price must be greater than 0")
         return price
 
-    def __repr__(self):
-        return f"<Product {self.name}, {self.price}>"
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'description': self.description,
-            'price': self.price,
-            'category': self.category,
-            'image_url': self.image_url
-        }
-
-class Order(db.Model, SerializerMixin):
+class Order(BaseModel):
     __tablename__ = "orders"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -85,14 +88,7 @@ class Order(db.Model, SerializerMixin):
     def __repr__(self):
         return f"<Order {self.id} by User {self.user_id}>"
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'user_id': self.user_id,
-            'products': [product.to_dict() for product in self.products]
-        }
-
-class OrderProduct(db.Model, SerializerMixin):
+class OrderProduct(BaseModel):
     __tablename__ = "order_products"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -106,20 +102,11 @@ class OrderProduct(db.Model, SerializerMixin):
 
     serialize_rules = ('-order.order_products', '-product.order_products')
 
+    def __repr__(self):
+        return f"<OrderProduct {self.quantity} of Product {self.product_id} in Order {self.order_id}>"
+
     @validates('quantity')
     def validate_quantity(self, key, quantity):
         if quantity <= 0:
             raise ValueError("Quantity must be greater than 0")
         return quantity
-
-    def __repr__(self):
-        return f"<OrderProduct {self.quantity} of Product {self.product_id} in Order {self.order_id}>"
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'order_id': self.order_id,
-            'product_id': self.product_id,
-            'quantity': self.quantity,
-            'special_request': self.special_request
-        }
