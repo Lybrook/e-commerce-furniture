@@ -1,6 +1,6 @@
 
 #!/usr/bin/env python3
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, jsonify
 from flask_migrate import Migrate
 from flask_restful import Api
 from models import db, User, Product, Order, OrderProduct
