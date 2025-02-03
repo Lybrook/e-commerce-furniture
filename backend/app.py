@@ -5,6 +5,7 @@ from flask_cors import CORS
 from models import db, User, Product, Order, OrderProduct
 import os
 from dotenv import load_dotenv
+
 load_dotenv()
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -87,16 +88,17 @@ def products():
         except Exception as e:
             return jsonify({"error": str(e)}), 400
 
-@app.route("/products/<int:product_id>", methods=["PATCH", "DELETE"])  
+@app.route("/products/<int:product_id>", methods=["PATCH", "DELETE"])
 def product_detail(product_id):
-    product = Product.query.get(product_id)
-    if not product:
-        return jsonify({"error": "Product not found"}), 404
+    product = Product.query.get_or_404(product_id)
     
     if request.method == "PATCH":
         data = request.get_json()
-        for key, value in data.items():
-            setattr(product, key, value)
+        product.name = data.get('name', product.name)
+        product.description = data.get('description', product.description)
+        product.price = data.get('price', product.price)
+        product.category = data.get('category', product.category)
+        product.image_url = data.get('image_url', product.image_url)
         db.session.commit()
         return jsonify(product.to_dict()), 200
     
@@ -106,25 +108,6 @@ def product_detail(product_id):
         return jsonify({"message": "Product deleted"}), 200
 
 # Order Routes
-@app.route("/orders", methods=["GET", "POST"])  
-def orders():
-    if request.method == "GET":
-        orders = Order.query.all()
-        return jsonify([order.to_dict() for order in orders]), 200
-    
-    if request.method == "POST":
-        data = request.get_json()
-        try:
-            order = Order(
-                user_id=data["user_id"],
-                total_cost=data["total_cost"]
-            )
-            db.session.add(order)
-            db.session.commit()
-            return jsonify(order.to_dict()), 201
-        except Exception as e:
-            return jsonify({"error": str(e)}), 400
-
 @app.route("/orders/<int:order_id>", methods=["DELETE"])
 def delete_order(order_id):
     order = Order.query.get(order_id)
