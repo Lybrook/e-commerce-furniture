@@ -71,15 +71,12 @@ class OrderProduct(BaseModel):
 class Product(BaseModel):
     __tablename__ = "products"
 
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
-    description = db.Column(db.String(255), nullable=True)
+    description = db.Column(db.Text, nullable=False)
     price = db.Column(db.Float, nullable=False)
-    category = db.Column(db.String(255), nullable=True)
-    image_url = db.Column(db.String(255), nullable=True)
-
-    def __repr__(self):
-        return f"<Product {self.id} - {self.name}>"
-
+    category = db.Column(db.String(255), nullable=False)
+    image_url = db.Column(db.String(2048), nullable=False)
     def to_dict(self):
         return {
             "id": self.id,
@@ -87,5 +84,5 @@ class Product(BaseModel):
             "description": self.description,
             "price": self.price,
             "category": self.category,
-            "image_url": self.image_url
+            "image_url": self.image_url,
         }
