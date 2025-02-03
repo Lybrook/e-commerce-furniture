@@ -28,6 +28,39 @@ const Products = () => {
     fetchProducts();
   }, []);
 
+  const handleUpdate = async (product) => {
+    try {
+      const response = await fetch(`https://e-comm-wkqo.onrender.com/products/${product.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(product),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update product");
+      }
+      const updatedProduct = await response.json();
+      setProducts(products.map((p) => (p.id === updatedProduct.id ? updatedProduct : p)));
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const handleDelete = async (productId) => {
+    try {
+      const response = await fetch(`https://e-comm-wkqo.onrender.com/products/${productId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete product");
+      }
+      setProducts(products.filter((product) => product.id !== productId));
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
   if (loading) {
     return <div className="flex justify-center items-center h-screen">Loading...</div>;
   }
