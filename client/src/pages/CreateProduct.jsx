@@ -15,7 +15,7 @@ const CreateProduct = () => {
     setError(null);
 
     try {
-      const response = await fetch("/api/products", {
+      const response = await fetch("https://e-comm-wkqo.onrender.com/products/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
