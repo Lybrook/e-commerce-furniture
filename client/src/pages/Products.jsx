@@ -9,7 +9,7 @@ const Products = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("/api/products", {
+        const response = await fetch("https://e-comm-wkqo.onrender.com/products", {
           headers: {
             Accept: "application/json",
           },
