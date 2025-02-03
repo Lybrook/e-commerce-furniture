@@ -144,7 +144,13 @@ def add_order_product():
         )
         db.session.add(order_product)
         db.session.commit()
-        return jsonify(order_product.to_dict()), 201
+        
+        # Update the order total cost
+        order = Order.query.get(data["order_id"])
+        order.total_cost += order_product.product.price * order_product.quantity
+        db.session.commit()
+        
+        return jsonify(order.to_dict()), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
