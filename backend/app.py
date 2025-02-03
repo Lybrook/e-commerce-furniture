@@ -4,13 +4,17 @@ from flask_restful import Api
 from flask_cors import CORS
 from models import db, User, Product, Order, OrderProduct
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-DATABASE = os.environ.get("DB_URI", f"sqlite:///{os.path.join(BASE_DIR, 'app.db')}")
+DATABASE = os.getenv("DATABASE_URL", f"sqlite:///{os.path.join(BASE_DIR, 'app.db')}")
+SECRET_KEY = os.getenv("SECRET_KEY", "your-default-secret-key")
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SECRET_KEY"] = SECRET_KEY
 app.json.compact = False
 
 CORS(app)
