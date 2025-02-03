@@ -149,8 +149,8 @@ def add_order_product():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-@app.route("/order_products/<int:order_id>", methods=["GET"])
-def get_order_products(order_id):
+@app.route("/order_products/details/<int:order_id>", methods=["GET"])
+def fetch_order_products(order_id):  # Renamed function
     order_products = OrderProduct.query.filter_by(order_id=order_id).all()
     return jsonify([order_product.to_dict() for order_product in order_products]), 200
 
