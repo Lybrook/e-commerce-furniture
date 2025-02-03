@@ -5,7 +5,6 @@ from flask_cors import CORS
 from models import db, User, Product, Order, OrderProduct
 import os
 from dotenv import load_dotenv
-
 load_dotenv()
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -88,26 +87,35 @@ def products():
         except Exception as e:
             return jsonify({"error": str(e)}), 400
 
-@app.route("/products/<int:product_id>", methods=["PATCH", "DELETE"])
-def product_detail(product_id):
+@app.route("/products/<int:product_id>", methods=["PATCH"])
+def update_product(product_id):
     product = Product.query.get_or_404(product_id)
-    
-    if request.method == "PATCH":
-        data = request.get_json()
-        product.name = data.get('name', product.name)
-        product.description = data.get('description', product.description)
-        product.price = data.get('price', product.price)
-        product.category = data.get('category', product.category)
-        product.image_url = data.get('image_url', product.image_url)
-        db.session.commit()
-        return jsonify(product.to_dict()), 200
-    
-    if request.method == "DELETE":
-        db.session.delete(product)
-        db.session.commit()
-        return jsonify({"message": "Product deleted"}), 200
+    data = request.get_json()
 
-# Order Routes
+    product.name = data.get('name', product.name)
+    product.description = data.get('description', product.description)
+    product.price = data.get('price', product.price)
+    product.category = data.get('category', product.category)
+    product.image_url = data.get('image_url', product.image_url)
+
+    db.session.commit()
+    return jsonify(product.to_dict()), 200
+
+@app.route("/order_products/<int:order_id>", methods=["GET"])
+def get_order_products(order_id):
+    order_products = OrderProduct.query.filter_by(order_id=order_id).all()
+    return jsonify([order_product.to_dict() for order_product in order_products]), 200
+
+@app.route("/order_products/<int:order_id>/<int:product_id>", methods=["DELETE"])  
+def delete_order_product(order_id, product_id):
+    order_product = OrderProduct.query.filter_by(order_id=order_id, product_id=product_id).first()
+    if not order_product:
+        return jsonify({"error": "Order product not found"}), 404
+    
+    db.session.delete(order_product)
+    db.session.commit()
+    return jsonify({"message": "Order product deleted"}), 200
+
 @app.route("/orders/<int:order_id>", methods=["DELETE"])
 def delete_order(order_id):
     order = Order.query.get(order_id)
