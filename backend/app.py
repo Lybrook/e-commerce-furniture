@@ -88,11 +88,14 @@ def products():
         except Exception as e:
             return jsonify({"error": str(e)}), 400
 
-@app.route("/products/<int:product_id>", methods=["PATCH", "DELETE"])
+@app.route("/products/<int:product_id>", methods=["GET", "PATCH", "PUT", "DELETE"])
 def product_detail(product_id):
     product = Product.query.get_or_404(product_id)
     
-    if request.method == "PATCH":
+    if request.method == "GET":
+        return jsonify(product.to_dict()), 200
+    
+    if request.method == "PATCH" or request.method == "PUT":
         data = request.get_json()
         product.name = data.get('name', product.name)
         product.description = data.get('description', product.description)
@@ -157,4 +160,5 @@ def delete_order_product(order_id, product_id):
     return jsonify({"message": "Order product deleted"}), 200
 
 if __name__ == "__main__":
-    app.run(port=5555, debug=True) 
+    from waitress import serve
+    serve(app, host="0.0.0.0", port=5555)

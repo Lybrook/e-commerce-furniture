@@ -1,102 +1,95 @@
 import { useState } from "react";
 
 const CreateProduct = () => {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [category, setCategory] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [product, setProduct] = useState({
+    name: "",
+    description: "",
+    price: "",
+    category: "",
+    image_url: "",
+  });
   const [error, setError] = useState(null);
+
+  const handleChange = (e) => {
+    setProduct({ ...product, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
-
     try {
-      const response = await fetch("https://e-comm-wkqo.onrender.com/products/products", {
+      const response = await fetch("https://e-comm-wkqo.onrender.com/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, description, price, category, image_url: imageUrl }),
+        body: JSON.stringify(product),
       });
-
       if (!response.ok) {
         throw new Error("Failed to create product");
       }
-
-      // Clear form fields
-      setName("");
-      setDescription("");
-      setPrice("");
-      setCategory("");
-      setImageUrl("");
+      const newProduct = await response.json();
+      console.log("Product created:", newProduct);
+      setProduct({
+        name: "",
+        description: "",
+        price: "",
+        category: "",
+        image_url: "",
+      });
     } catch (error) {
       setError(error.message);
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Create New Product</h2>
-        {error && <p className="text-red-600 mb-4">{error}</p>}
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 gap-4">
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="border p-2 rounded"
-              placeholder="Name"
-              required
-            />
-            <input
-              type="text"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="border p-2 rounded"
-              placeholder="Description"
-              required
-            />
-            <input
-              type="number"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              className="border p-2 rounded"
-              placeholder="Price"
-              required
-            />
-            <input
-              type="text"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="border p-2 rounded"
-              placeholder="Category"
-              required
-            />
-            <input
-              type="text"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              className="border p-2 rounded"
-              placeholder="Image URL"
-              required
-            />
-            <button
-              type="submit"
-              className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300"
-              disabled={loading}
-            >
-              {loading ? "Creating..." : "Create"}
-            </button>
-          </div>
-        </form>
-      </div>
+    <div className="p-10">
+      <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Create Product</h2>
+      {error && <div className="text-red-600 mb-4">{error}</div>}
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
+        <input
+          type="text"
+          name="name"
+          value={product.name}
+          onChange={handleChange}
+          className="border p-2 rounded"
+          placeholder="Name"
+        />
+        <input
+          type="text"
+          name="description"
+          value={product.description}
+          onChange={handleChange}
+          className="border p-2 rounded"
+          placeholder="Description"
+        />
+        <input
+          type="number"
+          name="price"
+          value={product.price}
+          onChange={handleChange}
+          className="border p-2 rounded"
+          placeholder="Price"
+        />
+        <input
+          type="text"
+          name="category"
+          value={product.category}
+          onChange={handleChange}
+          className="border p-2 rounded"
+          placeholder="Category"
+        />
+        <input
+          type="text"
+          name="image_url"
+          value={product.image_url}
+          onChange={handleChange}
+          className="border p-2 rounded"
+          placeholder="Image URL"
+        />
+        <button type="submit" className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition duration-300">
+          Create
+        </button>
+      </form>
     </div>
   );
 };
