@@ -11,6 +11,9 @@ Flask-Cors = "==3.0.10"
 Flask-SQLAlchemy = "==2.5.1"
 waitress = "==2.0.0"
 Werkzeug = "==2.2.3"
+psycopg2-binary = "*"
+python-dotenv = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.10"
