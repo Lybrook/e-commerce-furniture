@@ -170,4 +170,5 @@ def delete_order_product(order_id, product_id):
     return jsonify({"message": "Order product deleted"}), 200
 
 if __name__ == "__main__":
-    app.run(port=5555, debug=True)
+    from waitress import serve
+    serve(app, host="0.0.0.0", port=5555)
