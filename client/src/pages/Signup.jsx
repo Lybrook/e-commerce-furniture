@@ -21,7 +21,7 @@ function Signup() {
     }
 
     try {
-      const response = await fetch("/api/signup", {
+      const response = await fetch("https://e-commerce-furniture-uepv.onrender.com/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

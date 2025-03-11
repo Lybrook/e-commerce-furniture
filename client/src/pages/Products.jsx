@@ -9,7 +9,7 @@ const Products = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("https://e-comm-wkqo.onrender.com/products", {
+        const response = await fetch("https://e-commerce-furniture-uepv.onrender.com/products", {
           headers: {
             Accept: "application/json",
           },
@@ -30,7 +30,7 @@ const Products = () => {
 
   const handleUpdate = async (product) => {
     try {
-      const response = await fetch(`https://e-comm-wkqo.onrender.com/products/${product.id}`, {
+      const response = await fetch(`https://e-commerce-furniture-uepv.onrender.com/products/${product.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -49,7 +49,7 @@ const Products = () => {
 
   const handleDelete = async (productId) => {
     try {
-      const response = await fetch(`https://e-comm-wkqo.onrender.com/products/${productId}`, {
+      const response = await fetch(`https://e-commerce-furniture-uepv.onrender.com/products/${productId}`, {
         method: "DELETE",
       });
       if (!response.ok) {

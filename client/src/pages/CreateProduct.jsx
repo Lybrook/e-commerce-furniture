@@ -17,7 +17,7 @@ const CreateProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("https://e-comm-wkqo.onrender.com/products", {
+      const response = await fetch("https://e-commerce-furniture-uepv.onrender.com/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

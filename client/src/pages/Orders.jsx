@@ -25,7 +25,7 @@ const Orders = () => {
 
   const handleAddProduct = async (orderId, productId) => {
     try {
-      const productResponse = await fetch(`/api/products/${productId}`);
+      const productResponse = await fetch(`https://e-commerce-furniture-uepv.onrender.com/products/${productId}`);
       if (!productResponse.ok) {
         throw new Error("Failed to fetch product details");
       }
