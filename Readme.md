@@ -2,6 +2,10 @@
 
 This is a full-stack Inventory application for keeping records of furniture. The backend is built using Flask, while the frontend is developed with React.
 
+##Links
+https://e-commerce-furniture-six.vercel.app/
+https://e-commerce-furniture-uepv.onrender.com
+
 ## Features
 
 ### Backend (Flask API)
