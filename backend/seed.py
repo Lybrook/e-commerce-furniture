@@ -17,9 +17,9 @@ with app.app_context():
     users = [user1, user2, user3]
 
 
-    sofa = Product(name="Luxury Sofa", description="A comfortable luxury sofa.", price=1500.0, category="Sofa", image_url="https://example.com/sofa.jpg")
-    bed = Product(name="King Size Bed", description="A spacious and stylish bed.", price=2000.0, category="Bed", image_url="https://example.com/bed.jpg")
-    chair = Product(name="Ergonomic Chair", description="Perfect for work and study.", price=500.0, category="Chair", image_url="https://example.com/chair.jpg")
+    sofa = Product(name="Luxury Sofa", description="A comfortable luxury sofa.", price=1500.0, category="Sofa", image_url="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcOCWoGEK_AoRjJ1cPBUMe-z7QjkKtMa943A&s")
+    bed = Product(name="King Size Bed", description="A spacious and stylish bed.", price=2000.0, category="Bed", image_url="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1g5oyEvXoFFB02vZHdSQ-HDBk77GX5OsP3g&s")
+    chair = Product(name="Ergonomic Chair", description="Perfect for work and study.", price=500.0, category="Chair", image_url="https://www.mocka.co.nz/cdn/shop/files/T03710_Square_01.jpg?v=1723248328")
     products = [sofa, bed, chair]
 
  
